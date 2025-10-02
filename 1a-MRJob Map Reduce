@@ -17,7 +17,7 @@ class MRWordCountFrequency1a(MRJob):
       yield word, sum( values )
 
   def reducer(self, word, values):
-    yield word, values
+    yield word, sum(  values  )
 
 if __name__ == '__main__':
     MRWordCountFrequency1a.run()
