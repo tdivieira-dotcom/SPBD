@@ -22,15 +22,15 @@ class MRWordCountFrequency1c(MRJob):
       yield word, sum( occurrences )
 
   def mapper_sort(self, word, occurrences):
-      yield "{:06}".format(MAX_FREQ-int(occurrences)), word
+      yield "{:06}".format(MAX_FREQ-int(occurrences)), word   #palavras com mais ocorrências ficam com chaves menores (999995<999998)
 
   def reducer_sort(self, occurrences, words):
     for word in words:
-      yield word, MAX_FREQ - int(occurrences)
+      yield word, MAX_FREQ - int(occurrences)   #com as palavras já ordenadas por ocorrência, recuperamos o seu valor real. ex: MAX_FREQ-999995=5 
 
   def steps(self):
-    return [ MRStep(mapper=self.mapper_frq, combiner=self.combiner_frq, reducer=self.reducer_frq),
-      MRStep(mapper=self.mapper_sort, reducer=self.reducer_sort)
+    return [ MRStep(mapper=self.mapper_frq, combiner=self.combiner_frq, reducer=self.reducer_frq), #1º step o de contagem
+      MRStep(mapper=self.mapper_sort, reducer=self.reducer_sort)  #2º step o de ordenação
     ]
 
 if __name__ == '__main__':
