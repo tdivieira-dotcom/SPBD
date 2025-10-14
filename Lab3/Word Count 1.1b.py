@@ -15,16 +15,17 @@ try:
             .filter(lambda line: len(line) > 0) \
             .map(lambda line: line.strip()) \
             .map(lambda line: unicode(line).lower()) \
-            .map(lambda line: line.translate(str.maketrans('','', string.punctuation+'')))
+            .map(lambda line: line.translate(str.maketrans('','', string.punctuation+'«»')))
 
   words = lines.flatMap(lambda line : line.split()) \
             .map(lambda word: (word,1))\
             .reduceByKey( lambda a,b: a+b)
 
   
-  sorted_words=sortByKey(ascending=Faslse)
-  for w in sorted_words.collect(10):
-    print(w)
+  reverse_words=sortByKey(ascending=False) #Ordenamos as keys ao contrário (Z-A)
+
+  for word, count in reverse_words.take(10):
+    print(f"{word}:{count}")
 
 except Exception as e:
   print(e)
