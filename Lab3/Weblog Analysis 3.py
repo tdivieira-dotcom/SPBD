@@ -17,10 +17,11 @@ try:
             .filter( lambda line: len(line) == 6)
 
 
-  tuple = lines.map(lambda line: (line[0][0:18],line[4],line[1]))\      #crias tuples ip,1 
-          .count() #remove os ips duplicados
+  tuple = lines.map(lambda line: (line[0][0:18],line[4],line[1]))\      #crias tuples timestamp,URL, IP
+          .reduceByKey( lambda a, b : a | b ) \     # agregar os IPs se forem repetidos ficam como um conjunto
+          .sortByKey()           #ordenar por timestamp
 
- print(f"{number_unique_ips}")
-
+for t in tuple.collect():   #collect devolve a lista toda do RDD enquanto que take devolve os primeiros x elementos para take(x)
+    print(t)
 except Exception as e:
   print(e)
