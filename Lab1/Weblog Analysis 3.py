@@ -11,7 +11,7 @@ class MRWebLogStats2c_V1(MRJob):
             time_interval_10s = timestamp[0:18] //dentro da data só queremos até aos segundos
             yield "{}-{}".format(time_interval_10s, URL), ip   //cada URL e segundo fica com o ip de que foi acedido
 
-  def reducer(self, interval_URL, ips):
+  def reducer(self, interval_URL, ips):  //interval_URL é um tuple {time_interval_10s, URL}
             unique_ip= set(ips)
             yield interval_URL, unique_ip
   
