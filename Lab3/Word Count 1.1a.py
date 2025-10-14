@@ -11,20 +11,20 @@ spark = SparkSession \
 sc = spark.sparkContext
 
 try:
+    //colocar cada linha a minusculas, sem acentos nem quebras de linha
   lines = sc.textFile('os_maias.txt') \
             .filter(lambda line: len(line) > 0) \
             .map(lambda line: line.strip()) \
             .map(lambda line: unicode(line).lower()) \
-            .map(lambda line: line.translate(str.maketrans('','', string.punctuation+'')))
+            .map(lambda line: line.translate(str.maketrans('','', string.punctuation+'«»')))
 
+   //dividir cada linha em words, criar par {word,1} e agrupar por keys (fazendo a sua soma)
   words = lines.flatMap(lambda line : line.split()) \
             .map(lambda word: (word,1))\
             .reduceByKey( lambda a,b: a+b)
 
-  
-  
-  for w in words.collect(10):
-    print(w)
+  for word, count in words.take(10):
+    print(f"{word}:{count}")
 
 except Exception as e:
   print(e)
