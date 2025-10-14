@@ -23,7 +23,7 @@ try:
 
   
   words_frequency=words.sortBy(lambda x: x[1], ascending=False) #false- da maior frequência para a menor, o x é o RDD com a tupla por isso x[1] ordena pela frequência
-  for w in sorted_words.collect(10):
+  for w in words_frequency.collect(10):
     print(w)
 
 except Exception as e:
