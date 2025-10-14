@@ -9,8 +9,8 @@ class MRWebLogStats2b_V1(MRJob):
             timestamp = parts[0]
             execution_time = float(parts[5])
 
-            time_interval_10s = timestamp[0:18] //tempo é o timestamp da posição 0 à 18
-            yield time_interval_10s, execution_time   //associar à key que guarda 1 segundo o execution_time daquela request 
+            time_interval_10s = timestamp[0:18] #tempo é o timestamp da posição 0 à 18
+            yield time_interval_10s, execution_time   #associar à key que guarda 1 segundo o execution_time daquela request 
 
   def reducer(self, interval, execution_times):
       values = list(execution_times)
