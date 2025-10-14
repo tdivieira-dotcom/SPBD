@@ -1,28 +1,20 @@
-from mrjob.job import MRJob
+from mrjob.job import MRJob, MRStep
+from statistics import mean
 
-class MRUniqueIPs(MRJob):
+class MRWebLogStats2b_V1(MRJob):
 
-    def mapper(self, _, line):
-        # Ignora linhas vazias ou cabeçalho
-        tokens = line.strip().split('\t')
+  def mapper(self, _, line):
+      parts = line.split()
+      if len(parts) == 6:   # make sure the line is complete
+            timestamp = parts[0]
+            execution_time = float(parts[5])
 
-        ip = parts[1]  
-        yield ip, 1  # Cada IP lido fica com 1
+            time_interval_10s = timestamp[0:18] //tempo é o timestamp da posição 0 à 18
+            yield time_interval_10s, execution_time   //associar à key que guarda 1 segundo o execution_time daquela request 
 
-    def reducer(self, ip, counts):
-        yield "total_unique_ips", 1  # Cada IP diferente fica com [total_unique_ips,1], [total_unique_ips,1], ...
-
-    def reducer_sum(self, key, values):
-        yield key, sum(values)    # Somamos todos os "1" para obter o total final de IPs únicos
-
-
-    # Define a sequência de passos (Map → Reduce → Reduce)
-    def steps(self):
-        return [
-            self.mr(mapper=self.mapper, reducer=self.reducer),
-            self.mr(reducer=self.reducer_sum)
-        ]
-
+  def reducer(self, interval, execution_times):
+      values = list(execution_times)
+      yield interval, "count: {}, min: {}, max: {}, avg: {}".format(len(values), min(values), max(values), mean(values))
 
 if __name__ == '__main__':
-    MRUniqueIPs.run()
+    MRWebLogStats2b_V1.run()
