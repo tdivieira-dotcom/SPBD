@@ -16,8 +16,8 @@ try:
             .map(lambda line: line.split('\t')) \
             .filter( lambda line: len(line) == 6)
 
-
-  tuple = lines.map(lambda line: (line[0][0:18],line[4],line[1]))\      #crias tuples timestamp,URL, IP
+    
+  tuple = lines.map(lambda line: (line[0][0:18],line[4]),line[1])\      #crias tuples timestamp,URL, IP
           .reduceByKey( lambda a, b : a | b ) \     # agregar os IPs se forem repetidos ficam como um conjunto
           .sortByKey()           #ordenar por timestamp
 
