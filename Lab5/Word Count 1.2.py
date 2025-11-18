@@ -18,7 +18,7 @@ try :
   words = words.drop('line', 'listOfWords') #elimina as colunas line e list of words, ficando apenas a coluna words com uma palavra por linha
   frequencies = words.groupBy('words').count() #juntar as keys e somar a sua frequencia
   sortedFrequencies = frequencies.orderBy('count', ascending=False) #ordenar pelas mais frequentes 
-  top3Frequencies = sortedFrequencies.limit(10) #apenas as 3 mais frequentes
+  top3Frequencies = sortedFrequencies.limit(10) #apenas as 10 mais frequentes
   top3Frequencies.show()
 
 except Exception as err:
