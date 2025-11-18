@@ -1,16 +1,23 @@
-#@title 1.2)
+#@title 1.1c)
 from pyspark.sql import *
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 
-spark = SparkSession.builder.master('local[*]').appName('wordfrequency1.2)').getOrCreate()
+import string
+from unidecode import unidecode
+
+spark = SparkSession.builder.master('local[*]').appName('wordfrequency1.1c)').getOrCreate()
 sc = spark.sparkContext
 
 try :
   lines = sc.textFile('os_maias.txt') \
-            .filter( lambda line : len(line) > 1 )
+            .filter( lambda line : len(line) > 1 ) \
+            .map(lambda line: unidecode(line) \
+                                .translate(str.maketrans('', '', string.punctuation + '«»'))\
+                                .lower()\
+                                .strip())
 
-  structured_lines = lines.map( lambda line : Row( line = line, listOfWords = line.split(' ') ) )
+  structured_lines = lines.map( lambda line : Row( clean = line, listOfWords = line.split(' ') ) )
 
   wordsOfLine = spark.createDataFrame( structured_lines )
   
