@@ -11,14 +11,14 @@ spark = SparkSession.builder.master('local[*]').getOrCreate()
 
 try :
     logRows = spark.read.csv('weblog_with_header.log',
-                             sep =' ', header=True, inferSchema=True)
+                             sep =' ', header=True, inferSchema=True) #DataFrame lido do csv
 
     toInterval_udf = udf(toInterval, TimestampType())
 
-    intervals = logRows.select(toInterval_udf('date').alias("interval"), 'ipSource', "url")
+    intervals = logRows.select(toInterval_udf('date').alias("interval"), 'ipSource', "url") #aqui escolhemos as colunas interval que são os 10 segundos da coluna date, a coluna ipSource e a coluna url
 
-    stats = intervals.groupBy('interval', 'url').agg( collect_set('ipSource').alias('ips')) \
-              .orderBy('interval', 'url', ascending=False)
+    stats = intervals.groupBy('interval', 'url').agg( collect_set('ipSource').alias('ips')) \ #agrega os ips e fica apenas com os ips diferentes. coloca-os numa coluna "ips"
+              .orderBy('interval', 'url', ascending=False) # ordenar pelo maior intervalo
 
     stats.show(10, truncate = False)
 
