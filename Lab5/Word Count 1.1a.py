@@ -13,10 +13,25 @@ try :
   structured_lines = lines.map( lambda line : Row( line = line, listOfWords = line.split(' ') ) )
 
   wordsOfLine = spark.createDataFrame( structured_lines )
+  
+    wordsOfLine = spark.createDataFrame(structured_lines)
 
-  wordsOfLine.printSchema()
+# Explodir a lista de palavras 
+df = wordsOfLine.select(explode(col("listOfWords")).alias("word"))
 
-  wordsOfLine.show(5)
+# Remover palavras vazias (acontece quando há múltiplos espaços)
+df = df.drop("")     # <-- uso de drop, como pedido
+
+# Contar frequências
+freq = df.groupBy("word").count()
+
+# Ordenar por frequência decrescente
+freq_sorted = freq.orderBy(col("count").desc())
+
+# Buscar as 3 mais frequentes
+top3 = freq_sorted.limit(3)
+
+top3.show()
 except Exception as err:
   print(err)
   sc.stop()
