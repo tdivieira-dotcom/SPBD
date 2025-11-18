@@ -14,20 +14,11 @@ try :
 
   wordsOfLine = spark.createDataFrame( structured_lines )
   
-# 1) Explode a coluna complexa (listOfWords)
-  words = wordsOfLine.withColumn('words', explode('listOfWords'))
-
-# 2) Remover colunas antigas
-  words = words.drop('line', 'listOfWords')
-
-# 3) Agrupar pelas palavras
-  frequencies = words.groupBy('words').count()
-
-# 4) Ordenar pelas mais frequentes
-  sortedFrequencies = frequencies.orderBy('count', ascending=False)
-
-# 5) Limitar às top 3
-  top3Frequencies = sortedFrequencies.limit(3)
+  words = wordsOfLine.withColumn('words', explode('listOfWords')) #cria nova coluna words que "explode" a coluna listOfWords criando várias linhas para cada palavra presente na linha
+  words = words.drop('line', 'listOfWords') #elimina as colunas line e list of words, ficando apenas a coluna words com uma palavra por linha
+  frequencies = words.groupBy('words').count() #juntar as keys e somar a sua frequencia
+  sortedFrequencies = frequencies.orderBy('count', ascending=False) #ordenar pelas mais frequentes 
+  top3Frequencies = sortedFrequencies.limit(3) #apenas as 3 mais frequentes
   top3Frequencies.show()
 
 except Exception as err:
