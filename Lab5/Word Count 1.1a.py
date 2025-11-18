@@ -17,9 +17,7 @@ try :
   words = wordsOfLine.withColumn('words', explode('listOfWords')) #cria nova coluna words que "explode" a coluna listOfWords criando várias linhas para cada palavra presente na linha
   words = words.drop('line', 'listOfWords') #elimina as colunas line e list of words, ficando apenas a coluna words com uma palavra por linha
   frequencies = words.groupBy('words').count() #juntar as keys e somar a sua frequencia
-  sortedFrequencies = frequencies.orderBy('count', ascending=False) #ordenar pelas mais frequentes 
-  top3Frequencies = sortedFrequencies.limit(3) #apenas as 3 mais frequentes
-  top3Frequencies.show()
+  frequencies.show()
 
 except Exception as err:
   print(err)
