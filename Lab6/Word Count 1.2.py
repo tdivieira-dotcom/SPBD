@@ -18,7 +18,8 @@ try :
   x = spark.sql("SELECT word, count(*) AS frequency FROM \
                    (SELECT explode(split(cleanupLines(lines), ' ')) AS word FROM OSMAIAS) \
                  GROUP BY word \
-                 ORDER BY word DESC")
+                 ORDER BY word DESC\
+                 LIMIT 10")
 
   x.show(truncate=False)
 except Exception as err:
