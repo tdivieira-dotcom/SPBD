@@ -28,13 +28,13 @@ def latlon_to_grid_py(lat, lon):
 # ------------------------
 try :
       # Carregar dados
-      df = spark.read.csv('taxi_rides_1pc.csv.gz', sep =',', header=True, inferSchema=True)
+      df = spark.read.csv('taxi_rides_1pc.csv.gz', sep =',', header=True, inferSchema=True) 
 
       # Registrar UDF
-      udf_latlon = udf(latlon_to_grid_py, ArrayType(IntegerType()))
+      udf_latlon = udf(latlon_to_grid_py, ArrayType(IntegerType()))  
 
-      # Criar células
-      df = df.withColumn('pickup_cell', udf_latlon(col('pickup_latitude'), col('pickup_longitude'))) \
+      # Criar células pickup_cell e drop_off_cell
+      df = df.withColumn('pickup_cell', udf_latlon(col('pickup_latitude'), col('pickup_longitude'))) \ 
              .withColumn('dropoff_cell', udf_latlon(col('dropoff_latitude'), col('dropoff_longitude')))
 
       # Filtrar apenas células válidas dentro do grid
