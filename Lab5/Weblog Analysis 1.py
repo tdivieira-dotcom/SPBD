@@ -8,7 +8,7 @@ try :
   logRows = spark.read.csv('weblog_with_header.log', sep =' ', header=True, inferSchema=True)
 
   logRows.printSchema()
-  countIPs = logRows.select('ipSource').distinct().count()
-  print(countIPs)
+  countIPs = logRows.select('ipSource').distinct().count() #seleciona a coluna Ip, elimina as repetidas e conta quantas diferentes existem
+  print(countIPs) 
 except Exception as err:
   print(err)
